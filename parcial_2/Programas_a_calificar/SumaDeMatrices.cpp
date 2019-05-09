@@ -36,7 +36,7 @@ int main(){
   // }
 
   if (x1 > x2 && y1 > y2) {
-    
+
     int matriz3[x1][y1];
     cout << "x1: " << x1 << " y1: " << y1 << endl;
     // ESTO RELLENA LA NUEVA MATRIZ CON 0's

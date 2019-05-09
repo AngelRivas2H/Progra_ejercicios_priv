@@ -13,6 +13,7 @@ int main() {
   int i, j;
   cout << "Please enter a  word: ";
   cin >> str;
+  cout << "\n\n";
   char p[str.length()];
   for (i = 0; i < sizeof(p); i++) {
     p[i] = str[i];
