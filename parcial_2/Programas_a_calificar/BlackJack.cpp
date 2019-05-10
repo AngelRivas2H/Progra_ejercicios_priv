@@ -30,20 +30,18 @@ void printMatrix(vector< vector<string> > &matrix, int numero){
   cout << "EL JUGADOR UNO ES EL DEALER DE LAS CARTAS..." << endl;
   // cout << "numero de rows pasados a la funcion " << matrix.size() << endl;
   // cout << "numero de columnas pasados a la funcion " << matrix[0].size() << endl;
-  for (j = 0; j < numero; j++) {
+  for (j = 0; j <= numero; j++) {
     cout << "\n\nCartas del jugador " << j+1;
-    for (i = 1; i <= (matrix[0].size())-1; i++) {
+    for (i = 1; i <= (matrix[0].size()); i++) {
       cout << "\n\t Carta " << i << ": "<< matrix[j][i] << endl;
       // cout << "Cartas del jugador " << i+1 << "\n Carta 1: " << arreglo[i][1] << "\n Carta 2: " << arreglo[i][2] << "\n Puntos: " << arreglo[i][3] << endl;
-    }
-    cout << "\n\t\tPuntos totales: " << matrix.at(j).back() << endl;
   }
 }
 
 // void calcularPuntuacion(string arreglo[][4]){
 //   int limite = 21;
 //   int valorJuego = stoi(arreglo[][4]);
-// }
+}
 
 int calcularValor(string carta){
   int valor = 0, i = 0;
@@ -175,41 +173,99 @@ int main(){
   vector<vector<string> > jugadoresDinamico; // ARREGLO DINAMICO
   vector<string> expander; // creador de dos dimensiones
   vector<int> estadoDeJuego;
+  vector<int> puntos;
+  string JugadorAEliminar;
   jugadoresDinamico.push_back(expander); // Se le agrega el expander para transformarlo en un vector de dos dimensiones
+  jugadoresDinamico.resize(cantJugadores);//aqui se incrementa el numero de rows segun la cantidad de iteraciones del for
   for (i = 0; i <= cantJugadores-1; i++){
+    puntos.resize(i);
     jugadoresDinamico.at(i).push_back(to_string(i+1));
-    cout << "JUAGORES SIENDO AÑADIDOS: " << jugadoresDinamico.size() << endl;
-    jugadoresDinamico.resize(i+2);//aqui se incrementa el numero de rows segun la cantidad de iteraciones del for
-    estadoDeJuego.resize(i+1);
-    estadoDeJuego.push_back(1); // El numero uno es equivalente a "Jugando", y el 0 a "Perdió"
+    estadoDeJuego.push_back(1); // El numero 1 es equivalente a "Jugando", y el 0 a "Perdió"
   }
+  cout << "JUGADORES AÑADIDOS: " << jugadoresDinamico.size() << endl;
 
 
 
-  while (true) {
+  cout << "Nota: hay que tomar en cuenta que el jugador numero 1 es el dealer del juego, es decir, que se compite contra el." << endl;
+  int estado = 0;
+  do{
     contador++;
-    for (j = 0; j <= jugadoresDinamico.size(); j++) {
-      cout << "Turno del jugador " << jugadoresDinamico[i][0] << endl;
-      cout << "Nota: hay que tomar en cuenta que el jugador numero 1 es el dealer del juego, es decir, que se compite contra el." << endl;
+    cout << "Despues del while" << endl;
+    for (j = 0; j <= jugadoresDinamico.size()-1; j++) {
+      valorCarta = 0; // se reinicia el valorCarta para no sobreescribir valores
+      cout << "Turno del jugador " << jugadoresDinamico[j][0] << endl;
       if (jugadoresDinamico[j][0] == "1") { // SI ES EL TURNO DEL DEALER SOLO SE DA UNA CARTA
         jugadoresDinamico.at(j).push_back(cartaAleatoria(baraja)); //esta es una copia de la linea de abajo
-        cout << "Carta repartida esta vez " << jugadoresDinamico.at(j).back() << endl;
+        cout << "Carta repartida esta vez " << jugadoresDinamico.at(j).back() << "\n\n";
         valorCarta  += calcularValor(jugadoresDinamico[j].back()); // aqui se manda el string con la carta para calcular el valor
+        // jugadoresDinamico.at(j).push_back(to_string(valorCarta)); //aqui se inserta el valor da las cartas al final del row de jugador
+        puntos[j] += (valorCarta);
+        cout << "Valor de las cartas adquiridas " << puntos[j] << endl;
       }else{
         if (contador > 1) {
           cout << "Deseas pedir una carta[s/n]: ";
           cin >> controlCarta;
           if (controlCarta == "s") {
             /* PETICION DE LA CARTA CON UNA FUNCION */
-            cout << "otra carta" << endl;
+            jugadoresDinamico.at(j).push_back(cartaAleatoria(baraja));  //aqui se inserta el string con la carta generada de forma aletoria
+            cout << "Carta repartida esta vez " << jugadoresDinamico.at(j).back() << "\n\n"; // display del string de la carta repartida
+            valorCarta  += calcularValor(jugadoresDinamico[j].back()); // aqui se manda el string con la carta para calcular el valor
+            puntos[j] += (valorCarta);
+            cout << "Valor de las cartas adquiridas " << puntos[j] << endl;
+
+
+            if (puntos[j] == 21) {
+              cout << "El jugador " << j+1 << " ganó." << endl;
+              break;
+            }else if(puntos[j] > 21){
+              cout << "El jugador " << j+1 << " perdió el juego." << endl;
+
+              jugadoresDinamico.erase(jugadoresDinamico.begin() + j);
+
+
+
+              // break;
+            }
+
+
           }
         }else{
-          cout << "turno de otro JUAGORES" << endl;
-          /* SALIR DEL TURNO DE ESTE JUGADOR */
-        }
-      }
-    }
-  }
+          // jugadoresDinamico.at(j).push_back(cartaAleatoria(baraja));  //aqui se inserta el string con la carta generada de forma aletoria
+          if (contador == 1) {
+            jugadoresDinamico.at(j).push_back(cartaAleatoria(baraja));  //aqui se inserta el string con la carta generada de forma aletoria
+            cout << "Carta repartida esta vez " << jugadoresDinamico.at(j).back() << "\n\n"; // display del string de la carta repartida
+            valorCarta  += calcularValor(jugadoresDinamico[j].back()); // aqui se manda el string con la carta para calcular el valor
+
+            jugadoresDinamico.at(j).push_back(cartaAleatoria(baraja));  //aqui se inserta el string con la carta generada de forma aletoria
+            cout << "Carta repartida esta vez " << jugadoresDinamico.at(j).back() << "\n\n"; // display del string de la carta repartida
+            valorCarta  += calcularValor(jugadoresDinamico[j].back()); // aqui se manda el string con la carta para calcular el valor
+
+            puntos[j] += (valorCarta);
+            cout << "Valor de las cartas adquiridas " << puntos[j] << endl;
+
+
+            if (puntos[j] == 21) {
+              cout << "El jugador " << j+1 << " ganó." << endl;
+              break;
+            }else if(puntos[j] > 21){
+              cout << "El jugador " << j+1 << " perdió el juego." << endl;
+              jugadoresDinamico.erase(jugadoresDinamico.begin()+(j));
+            }
+
+
+          }else{
+            cout << "Se suman los puntos al total." << endl;
+            // juqgadoresDinamico.at(j).push_back(to_string(valorCarta)); // se inserta al final del row del jugador el valor de la carta
+          }
+        }/* SALIR DEL TURNO DE ESTE JUGADOR */
+        // cout << "SALIR DEL TURNO DE ESTE JUGADOR" << endl;
+      } // fin de los turnos de los jugadores
+      // cout << "fin de los turnos de los jugadores" << endl;
+    } // fin del for
+    // cout << "fin del for." << endl;
+    estado++;
+    printMatrix(jugadoresDinamico, jugadoresDinamico.size()-1);
+  }while (estado != 5); // fin del while
 
 
 //   for (j = 0; j <= jugadoresDinamico.size(); j++) {
@@ -275,5 +331,4 @@ int main(){
     *
     */
   // }
-  return 0;
 }

@@ -52,17 +52,18 @@ int main(){
         cin >> matriz3[i][j];
       }
     }
-    /* ESTO MUESTRA LAS MATRICES 1 Y 2(3)
-    // for (i = 0; i <= (x1-1); i++) {
-    //   for (j = 0; j <= (y1-1); j++) {
-    //     cout << "\n" << matriz3[i][j] << "\t ";
-    //   }
-    // }
-    // for (i = 0; i <= (x1-1); i++) {
-    //   for (j = 0; j <= (y1-1); j++) {
-    //     cout << "\n" << matriz1[i][j] << "\t ";
-    //   }
-    // } */
+    /* ESTO MUESTRA LAS MATRICES 1 Y 2(3) */
+    for (i = 0; i <= (x1-1); i++) {
+      for (j = 0; j <= (y1-1); j++) {
+        cout << "\n" << matriz3[i][j] << "\t ";
+      }
+    }
+    for (i = 0; i <= (x1-1); i++) {
+      for (j = 0; j <= (y1-1); j++) {
+        cout << "\n" << matriz1[i][j] << "\t ";
+      }
+    }
+    
   }else if (x1 < x2 && y1 < y2) {
     int matriz3[x2][y2];
     cout << "x2: " << x2 << " y2: " << y2 << endl;
